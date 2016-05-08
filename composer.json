@@ -1,0 +1,22 @@
+{
+  "name": "bixie/mailchimp",
+  "module": "bixie/mailchimp",
+  "type": "pagekit-extension",
+  "version": "0.9",
+  "title": "Bixie Mailchimp Widget",
+  "description": "The Bixie Mailchimp widget shows a subscription form for Mailchimp mailing lists.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Bixie",
+      "email": "info@bixie.org",
+      "homepage": "http://www.bixie.org"
+    }
+  ],
+  "extra": {
+    "icon": "icon.svg"
+  },
+  "require": {
+    "mailchimp/mailchimp": "~2.0.6"
+  }
+}
