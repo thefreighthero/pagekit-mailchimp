@@ -7,7 +7,7 @@ use Pagekit\Application as App;
 class MailchimpApiController {
 
 	/**
-	 * @Access("system: manage settings")
+	 * @Access("system: access settings")
 	 * @Route("/list", methods="GET")
 	 * @Request({"filter": "array"}, csrf=true)
 	 */
@@ -27,7 +27,7 @@ class MailchimpApiController {
 	}
 
 	/**
-	 * @Access("system: manage settings")
+	 * @Access("system: access settings")
 	 * @Route("/merge_vars", methods="GET")
 	 * @Request({"list_id": "string"}, csrf=true)
 	 */
