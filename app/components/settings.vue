@@ -40,16 +40,13 @@
 
         methods: {
 
-            save: function () {
+            save() {
                 this.$http.post('admin/system/settings/config', {
                         name: 'bixie/mailchimp',
                         config: this.package.config
-                    }).then(function () {
-                        this.$notify('Settings saved.', '');
-                    }, function (res) {
-                        this.$notify(res.data, 'danger');
-                    }
-                );
+                    })
+                    .then(() => this.$notify('Settings saved.', ''),
+                        res => this.$notify(res.data, 'danger'));
             }
 
         }

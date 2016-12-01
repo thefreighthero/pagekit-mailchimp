@@ -17,7 +17,8 @@ module.exports = [
         module: {
             loaders: [
                 {test: /\.vue$/, loader: "vue"},
-                {test: /\.html$/, loader: "vue-html"}
+                {test: /\.html$/, loader: "vue-html"},
+                {test: /\.js/, loader: 'babel', query: {presets: ['es2015']}}
             ]
         }
 
@@ -40,7 +41,8 @@ module.exports = [
         module: {
             loaders: [
                 {test: /\.vue$/, loader: "vue"},
-                {test: /\.html$/, loader: "vue-html"}
+                {test: /\.html$/, loader: "vue-html"},
+                {test: /\.js/, loader: 'babel', query: {presets: ['es2015']}}
             ]
         }
 

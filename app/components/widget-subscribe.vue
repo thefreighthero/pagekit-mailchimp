@@ -55,7 +55,7 @@
 
         props: ['widget', 'config', 'form'],
 
-        created: function () {
+        created() {
             this.$options.partials = this.$parent.$options.partials;
             this.$set('widget.data', _.merge({
                 view: 'subscribe',

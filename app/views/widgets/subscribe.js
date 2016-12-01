@@ -1,6 +1,6 @@
 module.exports = {
 
-    data: function () {
+    data() {
         return _.merge({
             loading: false,
             mergefields: [],
@@ -12,15 +12,15 @@ module.exports = {
         });
     },
 
-    ready: function () {
+    ready() {
         this.resource = this.$resource('api/mailchimp{/id}');
         this.list_id = this.$el.getAttribute('data-list_id');
     },
 
     computed: {
-        merge_vars: function () {
+        merge_vars() {
             var merge_vars = {};
-            this.mergefields.forEach(function (mergefield) {
+            this.mergefields.forEach(mergefield => {
                 if (!mergefield.widget_show || mergefield.field_type === 'email') {
                     return;
                 }
@@ -28,18 +28,23 @@ module.exports = {
             });
             return merge_vars;
         },
-        email: function () {
+        email() {
             var mailfield = _.find(this.mergefields, 'field_type', 'email');
             return mailfield ? mailfield.value : '';
         }
     },
 
     methods: {
-        setMergefields: function (mergefields) {
+        setMergefields(mergefields) {
             this.mergefields = mergefields;
         },
 
-        submit: function () {
+        submit() {
+            if (!this.email) {
+                this.result = 'fail';
+                this.message = this.$trans('Please enter a valid email address');
+                return;
+            }
             this.loading = true;
             this.result = '';
             this.message = '';
@@ -47,11 +52,11 @@ module.exports = {
                 list_id: this.list_id,
                 email: this.email,
                 merge_vars: this.merge_vars
-            }).then(function (res) {
+            }).then(res => {
                 this.result = res.data.result;
                 this.message = res.data.message;
                 this.loading = false;
-            }, function (res) {
+            }, res => {
                 this.result = 'fail';
                 this.message = res.data;
                 this.loading = false;
