@@ -15,7 +15,7 @@ $view->script('widget-mailchimp-subscribe', 'bixie/mailchimp:app/bundle/widget-m
 <form id="<?=$id?>" data-list_id="<?=$list_id?>" class="uk-form" v-cloak>
 
 	<?php if (!empty($text)) : ?>
-		<p><?php echo $text; ?></p>
+		<div class="uk-clearfix"><?php echo $text; ?></div>
 	<?php endif; ?>
 
 
