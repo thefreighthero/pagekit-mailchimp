@@ -63,7 +63,7 @@
 <script>
 
 
-    module.exports = {
+    export default {
 
         section: {
             label: 'List',
@@ -71,12 +71,16 @@
 
         replace: false,
 
-        props: ['widget', 'config', 'form'],
+        props: {'widget': Object, 'config': Object, 'form': Object,},
 
-        data() {
-            return {
-                lists: [],
-            }
+        data: () => ({
+            lists: [],
+        }),
+
+        watch: {
+            'widget.data.list_id'(list_id) {
+                this.loadMergeVars(list_id);
+            },
         },
 
         created() {
@@ -92,16 +96,16 @@
         },
 
         ready() {
-            var vm = this;
+            const vm = this;
             UIkit.nestable(this.$els.mergefieldsNestable, {
                 maxDepth: 1,
                 handleClass: 'uk-nestable-handle',
                 group: 'mailchimp.mergefields'
-            }).on('change.uk.nestable', function (e, nestable, el, type) {
+            }).on('change.uk.nestable', (e, nestable, el, type) => {
                 if (type && type !== 'removed') {
 
                     var mergefields = [];
-                    _.forEach(nestable.list(), function (item, idx) {
+                    _.forEach(nestable.list(), (item, idx) => {
                         var mergefield = _.find(vm.widget.data.merge_vars, 'tag', item.tag);
                         mergefield.widget_order = idx;
                         mergefields.push(mergefield);
@@ -113,12 +117,6 @@
             });
         },
 
-        watch: {
-            'widget.data.list_id': function (list_id) {
-                this.loadMergeVars(list_id);
-            },
-        },
-
         methods: {
             loadLists() {
                 this.resource.query({id: 'list'})
@@ -128,23 +126,23 @@
             loadMergeVars(list_id) {
                 this.merge_vars = [];
                 if (list_id) {
-                    this.resource.query({id: 'merge_vars'}, {list_id})
-                        .then(res => this.mergeMergeVars(_.find(res.data.data, {id: list_id}).merge_vars),
+                    this.resource.query({id: 'merge_vars'}, {list_id,})
+                        .then(res => this.mergeMergeVars(_.find(res.data.data, {id: list_id,}).merge_vars),
                             res => this.$notify(res.data, 'danger'))
                 }
             },
 
             mergeMergeVars(merge_vars) {
-                var mergefields = [];
+                const mergefields = [];
                 _.forEach(merge_vars, merge_var => {
-                    var existing = _.find(this.widget.data.merge_vars, 'tag', merge_var.tag);
+                    const existing = _.find(this.widget.data.merge_vars, 'tag', merge_var.tag);
                     mergefields.push(_.merge(
                             merge_var,
                             {
                                 widget_show: this.fieldTypeSupported(merge_var.field_type),
                                 value: '',
                                 label: merge_var.name,
-                                widget_order: 0
+                                widget_order: 0,
                             },
                             (existing || {})
                     ));

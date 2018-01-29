@@ -1,51 +1,51 @@
-module.exports = [
+export default [
 
     {
         entry: {
-            "settings": "./app/components/settings.vue",
-            "widget-subscribe": "./app/components/widget-subscribe.vue"
+            'settings': './app/components/settings.vue',
+            'widget-subscribe': './app/components/widget-subscribe.vue',
         },
         output: {
-            filename: "./app/bundle/[name].js"
+            filename: './app/bundle/[name].js',
         },
         externals: {
-            "lodash": "_",
-            "jquery": "jQuery",
-            "uikit": "UIkit",
-            "vue": "Vue"
+            'lodash': '_',
+            'jquery': 'jQuery',
+            'uikit': 'UIkit',
+            'vue': 'Vue',
         },
         module: {
             loaders: [
-                {test: /\.vue$/, loader: "vue"},
-                {test: /\.html$/, loader: "vue-html"},
-                {test: /\.js/, loader: 'babel', query: {presets: ['es2015']}}
-            ]
-        }
+                {test: /\.vue$/, loader: 'vue',},
+                {test: /\.html$/, loader: 'vue-html',},
+                {test: /\.js/, loader: 'babel', query: {presets: ['es2015',],},},
+            ],
+        },
 
     },
 
     {
         entry: {
-            "widget-mailchimp-subscribe": "./app/views/widgets/subscribe.js"
+            'widget-mailchimp-subscribe': './app/views/widgets/subscribe.js',
         },
         output: {
-            filename: "./app/bundle/[name].js",
-            library: "MailchimpSubscribe"
+            filename: './app/bundle/[name].js',
+            library: 'MailchimpSubscribe',
         },
         externals: {
-            "lodash": "_",
-            "jquery": "jQuery",
-            "uikit": "UIkit",
-            "vue": "Vue"
+            'lodash': '_',
+            'jquery': 'jQuery',
+            'uikit': 'UIkit',
+            'vue': 'Vue',
         },
         module: {
             loaders: [
-                {test: /\.vue$/, loader: "vue"},
-                {test: /\.html$/, loader: "vue-html"},
-                {test: /\.js/, loader: 'babel', query: {presets: ['es2015']}}
-            ]
-        }
+                {test: /\.vue$/, loader: 'vue',},
+                {test: /\.html$/, loader: 'vue-html',},
+                {test: /\.js/, loader: 'babel', query: {presets: ['es2015',],},},
+            ],
+        },
 
-    }
+    },
 
 ];

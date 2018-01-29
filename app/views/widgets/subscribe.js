@@ -1,25 +1,20 @@
-module.exports = {
+/*global _*/
 
-    data() {
-        return _.merge({
-            loading: false,
-            mergefields: [],
-            result: '',
-            message: '',
-            name: '',
-            email: '',
-            list_id: ''
-        });
-    },
+export default {
 
-    ready() {
-        this.resource = this.$resource('api/mailchimp{/id}');
-        this.list_id = this.$el.getAttribute('data-list_id');
-    },
+    data: () => _.merge({
+        loading: false,
+        mergefields: [],
+        result: '',
+        message: '',
+        name: '',
+        email: '',
+        list_id: '',
+    }),
 
     computed: {
         merge_vars() {
-            var merge_vars = {};
+            const merge_vars = {};
             this.mergefields.forEach(mergefield => {
                 if (!mergefield.widget_show || mergefield.field_type === 'email') {
                     return;
@@ -29,9 +24,14 @@ module.exports = {
             return merge_vars;
         },
         email() {
-            var mailfield = _.find(this.mergefields, 'field_type', 'email');
+            const mailfield = _.find(this.mergefields, 'field_type', 'email');
             return mailfield ? mailfield.value : '';
-        }
+        },
+    },
+
+    ready() {
+        this.resource = this.$resource('api/mailchimp{/id}');
+        this.list_id = this.$el.getAttribute('data-list_id');
     },
 
     methods: {
@@ -48,10 +48,10 @@ module.exports = {
             this.loading = true;
             this.result = '';
             this.message = '';
-            this.resource.save({id: 'subscribe'}, {
+            this.resource.save({id: 'subscribe',}, {
                 list_id: this.list_id,
                 email: this.email,
-                merge_vars: this.merge_vars
+                merge_vars: this.merge_vars,
             }).then(res => {
                 this.result = res.data.result;
                 this.message = res.data.message;
@@ -61,6 +61,6 @@ module.exports = {
                 this.message = res.data;
                 this.loading = false;
             });
-        }
-    }
+        },
+    },
 };

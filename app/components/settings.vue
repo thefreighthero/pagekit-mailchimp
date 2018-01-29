@@ -25,16 +25,15 @@
             </div>
         </div>
 
-
     </div>
 
 </template>
 
 <script>
 
-    module.exports = {
+    const vm = {
 
-        props: ['package'],
+        props: {'package': Object,},
 
         settings: true,
 
@@ -47,12 +46,13 @@
                     })
                     .then(() => this.$notify('Settings saved.', ''),
                         res => this.$notify(res.data, 'danger'));
-            }
+            },
 
-        }
+        },
 
     };
 
-    window.Extensions.components['settings-mailchimp'] = module.exports;
+    window.Extensions.components['settings-mailchimp'] = vm;
+    export default vm;
 
 </script>

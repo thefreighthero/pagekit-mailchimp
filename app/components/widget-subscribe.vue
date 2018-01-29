@@ -43,17 +43,17 @@
 </template>
 
 <script>
+    import SubscribeList from './widget-subscribe-list.vue';
 
-
-    module.exports = {
+    const vm = {
 
         section: {
-            label: 'Settings'
+            label: 'Settings',
         },
 
         replace: false,
 
-        props: ['widget', 'config', 'form'],
+        props: {'widget': Object, 'config': Object, 'form': Object,},
 
         created() {
             this.$options.partials = this.$parent.$options.partials;
@@ -61,14 +61,14 @@
                 view: 'subscribe',
                 button_text: 'Subscribe',
                 text: '',
-                markdown: false
+                markdown: false,
             }, this.widget.data));
-        }
+        },
 
     };
 
-    window.Widgets.components['bixie-mailchimp-subscribe:list'] = require('./widget-subscribe-list.vue');
+    window.Widgets.components['bixie-mailchimp-subscribe:list'] = SubscribeList;
 
-    window.Widgets.components['bixie-mailchimp-subscribe:settings'] = module.exports;
-
+    window.Widgets.components['bixie-mailchimp-subscribe:settings'] = vm;
+    export default vm;
 </script>
