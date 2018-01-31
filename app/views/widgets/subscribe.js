@@ -1,6 +1,6 @@
 /*global _*/
 
-export default {
+const vm = {
 
     data: () => _.merge({
         loading: false,
@@ -64,3 +64,5 @@ export default {
         },
     },
 };
+window.MailchimpSubscribe = vm;
+export default vm;
