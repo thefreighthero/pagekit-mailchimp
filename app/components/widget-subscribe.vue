@@ -6,7 +6,9 @@
             <div class="uk-form-row">
                 <label for="form-title" class="uk-form-label">{{ 'Title' | trans }}</label>
                 <div class="uk-form-controls">
-                    <input id="form-title" class="uk-form-width-large" type="text" name="title" v-model="widget.title" v-validate:required>
+                    <input id="form-title" class="uk-form-width-large" type="text"
+                           name="title" v-model="widget.title"
+                           v-validate:required>
                     <p class="uk-form-help-block uk-text-danger" v-show="form.title.invalid">{{ 'Title cannot be blank.' | trans }}</p>
                 </div>
             </div>
@@ -43,32 +45,37 @@
 </template>
 
 <script>
-    import SubscribeList from './widget-subscribe-list.vue';
+/*global _ */
+import SubscribeList from './widget-subscribe-list.vue';
 
-    const vm = {
+// @vue/component
+const vm = {
 
-        section: {
-            label: 'Settings',
-        },
+    name: 'MailchimpWidgetSubscribe',
 
-        replace: false,
+    section: {
+        label: 'Settings',
+    },
 
-        props: {'widget': Object, 'config': Object, 'form': Object,},
+    replace: false,
 
-        created() {
-            this.$options.partials = this.$parent.$options.partials;
-            this.$set('widget.data', _.merge({
-                view: 'subscribe',
-                button_text: 'Subscribe',
-                text: '',
-                markdown: false,
-            }, this.widget.data));
-        },
+    props: {'widget': Object, 'config': Object, 'form': Object,},
 
-    };
+    created() {
+        this.$options.partials = this.$parent.$options.partials;
+        this.$set('widget.data', _.merge({
+            view: 'subscribe',
+            button_text: 'Subscribe',
+            text: '',
+            markdown: false,
+        }, this.widget.data));
+    },
 
-    window.Widgets.components['bixie-mailchimp-subscribe:list'] = SubscribeList;
+};
 
-    window.Widgets.components['bixie-mailchimp-subscribe:settings'] = vm;
-    export default vm;
+window.Widgets.components['bixie-mailchimp-subscribe:list'] = SubscribeList;
+
+window.Widgets.components['bixie-mailchimp-subscribe:settings'] = vm;
+//needs to be exported to compile template
+export default vm;
 </script>

@@ -20,8 +20,11 @@
         <div class="uk-form-row">
             <label for="form-api_key" class="uk-form-label">{{ 'Mailchimp API key' | trans }}</label>
             <div class="uk-form-controls">
-                <input id="form-api_key" class="uk-form-width-large" type="text" name="title" v-model="package.config.api_key" v-validate:required>
-                <p class="uk-form-help-block uk-text-danger" v-show="form.title.invalid">{{ 'API key cannot be blank.' | trans }}</p>
+                <input id="form-api_key" class="uk-form-width-large" type="text"
+                       name="title" v-model="package.config.api_key"
+                       v-validate:required>
+                <p class="uk-form-help-block uk-text-danger"
+                   v-show="form.title.invalid">{{ 'API key cannot be blank.' | trans }}</p>
             </div>
         </div>
 
@@ -31,28 +34,30 @@
 
 <script>
 
-    const vm = {
+// @vue/component
+const vm = {
 
-        props: {'package': Object,},
+    name: 'MailchimpWidgetSettings',
 
-        settings: true,
+    props: {'package': Object,},
 
-        methods: {
+    settings: true,
 
-            save() {
-                this.$http.post('admin/system/settings/config', {
-                        name: 'bixie/mailchimp',
-                        config: this.package.config
-                    })
-                    .then(() => this.$notify('Settings saved.', ''),
-                        res => this.$notify(res.data, 'danger'));
-            },
+    methods: {
 
+        save() {
+            this.$http.post('admin/system/settings/config', {
+                name: 'bixie/mailchimp',
+                config: this.package.config,
+            })
+                .then(() => this.$notify('Settings saved.', ''),
+                    res => this.$notify(res.data, 'danger'));
         },
 
-    };
+    },
 
-    window.Extensions.components['settings-mailchimp'] = vm;
-    export default vm;
+};
+
+window.Extensions.components['settings-mailchimp'] = vm;
 
 </script>

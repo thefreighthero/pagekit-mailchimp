@@ -1,6 +1,9 @@
 /*global _*/
 
+// @vue/component
 const vm = {
+
+    name: 'MailchimpSubscribe',
 
     data: () => _.merge({
         loading: false,
@@ -65,4 +68,3 @@ const vm = {
     },
 };
 window.MailchimpSubscribe = vm;
-export default vm;

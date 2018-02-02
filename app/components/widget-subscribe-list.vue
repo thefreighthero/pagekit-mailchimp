@@ -22,7 +22,7 @@
                         <div class="uk-nestable-panel uk-visible-hover uk-form uk-flex uk-flex-middle">
                             <div class="uk-width-1-4">
                                 <div class="uk-text-small" :class="{'uk-text-danger': !fieldTypeSupported(mergefield.field_type)}"
-                                    :title="!fieldTypeSupported(mergefield.field_type) ? 'Fieldtype not supported' : ''">
+                                     :title="!fieldTypeSupported(mergefield.field_type) ? 'Fieldtype not supported' : ''">
                                     {{ mergefield.field_type }}
                                 </div>
                                 <strong>{{ mergefield.name }}</strong>
@@ -42,8 +42,10 @@
                                     </select>
                                 </div>
                             </div>
-                            <label class="uk-margin-left"><input type="checkbox" v-model="mergefield.widget_show" class="uk-margin-small-right"
-                                          :disabled="mergefield.req || !fieldTypeSupported(mergefield.field_type)"/>
+                            <label class="uk-margin-left">
+                                <input type="checkbox" class="uk-margin-small-right"
+                                       v-model="mergefield.widget_show"
+                                       :disabled="mergefield.req || !fieldTypeSupported(mergefield.field_type)"/>
                                 {{ 'Show in widget' | trans }}
                             </label>
                             <ul class="uk-subnav pk-subnav-icon uk-margin-left">
@@ -61,100 +63,101 @@
 </template>
 
 <script>
+/*global _, UIkit */
 
+export default {
 
-    export default {
+    name: 'MailchimpWidgetSubscribeList',
 
-        section: {
-            label: 'List',
+    section: {
+        label: 'List',
+    },
+
+    replace: false,
+
+    props: {'widget': Object, 'config': Object, 'form': Object,},
+
+    data: () => ({
+        lists: [],
+    }),
+
+    watch: {
+        'widget.data.list_id'(list_id) {
+            this.loadMergeVars(list_id);
         },
+    },
 
-        replace: false,
+    created() {
+        this.$options.partials = this.$parent.$options.partials;
+        this.resource = this.$resource('api/mailchimp{/id}');
+        this.$set('widget.data', _.merge({
+            view: 'subscribe',
+            list_id: '',
+            merge_vars: [],
+        }, this.widget.data));
+        this.loadLists();
+        this.loadMergeVars(this.widget.data.list_id);
+    },
 
-        props: {'widget': Object, 'config': Object, 'form': Object,},
+    ready() {
+        UIkit.nestable(this.$els.mergefieldsNestable, {
+            maxDepth: 1,
+            handleClass: 'uk-nestable-handle',
+            group: 'mailchimp.mergefields',
+        }).on('change.uk.nestable', (e, nestable, el, type) => {
+            if (type && type !== 'removed') {
 
-        data: () => ({
-            lists: [],
-        }),
-
-        watch: {
-            'widget.data.list_id'(list_id) {
-                this.loadMergeVars(list_id);
-            },
-        },
-
-        created() {
-            this.$options.partials = this.$parent.$options.partials;
-            this.resource = this.$resource('api/mailchimp{/id}');
-            this.$set('widget.data', _.merge({
-                view: 'subscribe',
-                list_id: '',
-                merge_vars: []
-            }, this.widget.data));
-            this.loadLists();
-            this.loadMergeVars(this.widget.data.list_id);
-        },
-
-        ready() {
-            const vm = this;
-            UIkit.nestable(this.$els.mergefieldsNestable, {
-                maxDepth: 1,
-                handleClass: 'uk-nestable-handle',
-                group: 'mailchimp.mergefields'
-            }).on('change.uk.nestable', (e, nestable, el, type) => {
-                if (type && type !== 'removed') {
-
-                    var mergefields = [];
-                    _.forEach(nestable.list(), (item, idx) => {
-                        var mergefield = _.find(vm.widget.data.merge_vars, 'tag', item.tag);
-                        mergefield.widget_order = idx;
-                        mergefields.push(mergefield);
-                    });
-
-                    vm.$set('widget.data.merge_vars', mergefields);
-
-                }
-            });
-        },
-
-        methods: {
-            loadLists() {
-                this.resource.query({id: 'list'})
-                    .then(res =>this.lists = res.data.data, res => this.$notify(res.data, 'danger'))
-            },
-
-            loadMergeVars(list_id) {
-                this.merge_vars = [];
-                if (list_id) {
-                    this.resource.query({id: 'merge_vars'}, {list_id,})
-                        .then(res => this.mergeMergeVars(_.find(res.data.data, {id: list_id,}).merge_vars),
-                            res => this.$notify(res.data, 'danger'))
-                }
-            },
-
-            mergeMergeVars(merge_vars) {
                 const mergefields = [];
-                _.forEach(merge_vars, merge_var => {
-                    const existing = _.find(this.widget.data.merge_vars, 'tag', merge_var.tag);
-                    mergefields.push(_.merge(
-                            merge_var,
-                            {
-                                widget_show: this.fieldTypeSupported(merge_var.field_type),
-                                value: '',
-                                label: merge_var.name,
-                                widget_order: 0,
-                            },
-                            (existing || {})
-                    ));
+                _.forEach(nestable.list(), (item, idx) => {
+                    let mergefield = _.find(this.widget.data.merge_vars, 'tag', item.tag);
+                    mergefield.widget_order = idx;
+                    mergefields.push(mergefield);
                 });
-                this.widget.data.merge_vars = mergefields;
-            },
 
-            fieldTypeSupported(field_type) {
-                return ['text', 'email', 'number', 'radio', 'dropdown'].indexOf(field_type) > -1;
-            },
+                this.$set('widget.data.merge_vars', mergefields);
+
+            }
+        });
+    },
+
+    methods: {
+        loadLists() {
+            this.resource.query({id: 'list',})
+                .then(res =>this.lists = res.data.data, res => this.$notify(res.data, 'danger'))
         },
 
-    };
+        loadMergeVars(list_id) {
+            this.merge_vars = [];
+            if (list_id) {
+                this.resource.query({id: 'merge_vars',}, {list_id,})
+                    .then(res => this.mergeMergeVars(_.find(res.data.data, {id: list_id,}).merge_vars),
+                        res => this.$notify(res.data, 'danger'))
+            }
+        },
+
+        mergeMergeVars(merge_vars) {
+            const mergefields = [];
+            _.forEach(merge_vars, merge_var => {
+                const existing = _.find(this.widget.data.merge_vars, 'tag', merge_var.tag);
+                mergefields.push(_.merge(
+                    merge_var,
+                    {
+                        widget_show: this.fieldTypeSupported(merge_var.field_type),
+                        value: '',
+                        label: merge_var.name,
+                        widget_order: 0,
+                    },
+                    (existing || {})
+                ));
+            });
+            this.widget.data.merge_vars = mergefields;
+        },
+
+        fieldTypeSupported(field_type) {
+            return ['text', 'email', 'number', 'radio', 'dropdown',].indexOf(field_type) > -1;
+        },
+    },
+
+};
 
 </script>
